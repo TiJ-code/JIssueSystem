@@ -9,12 +9,13 @@ jobs:
     permissions:
       issues: write
     steps:
+      # Checkout the tag commit
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Open Issue
         run: |
-          gh issue create \
-            --title "$TITLE" \
-            --body "$BODY" \
-            --label "automated-report"
+          gh issue create --title "$TITLE" --body "$BODY" --label "automated-report"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TITLE: ${{ github.event.client_payload.title }}
