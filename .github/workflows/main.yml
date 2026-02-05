@@ -12,8 +12,10 @@ jobs:
       - name: Open Issue
         run: |
           gh issue create \
-            --title "${{ github.event.client_payload.title }}" \
-            --body "${{ github.event.client_payload.body }}" \
+            --title "$TITLE" \
+            --body "$BODY" \
             --label "automated-report"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: ${{ github.event.client_payload.title }}
+          BODY: ${{ github.event.client_payload.body }}
