@@ -6,6 +6,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * @author tij
+ * @since 0.1.0
+ */
+@Deprecated(since = "0.0.2")
 public class JIssueSystem {
     private final String repoOwner;
     private final String repoName;
@@ -17,10 +22,12 @@ public class JIssueSystem {
         this.pat = pat;
     }
 
+    @Deprecated(since = "0.0.2")
     public static CompletableFuture<Integer> report(String repoOwner, String repoName, String pat, String title, String body) {
         return new JIssueSystem(repoOwner, repoName, pat).report(title, body);
     }
 
+    @Deprecated(since = "0.0.2")
     public final CompletableFuture<Integer> report(String title, String body) {
         final String url = String.format("https://api.github.com/repos/%s/%s/dispatches", repoOwner, repoName);
 
@@ -66,7 +73,7 @@ public class JIssueSystem {
         * **OS:** %s (%s)
         * **Java:** %s (%s)
         """,
-            System.getProperty("os.name"), System.getProperty("os.arch"),
+            System.getProperty("os.title"), System.getProperty("os.arch"),
             System.getProperty("java.version"), System.getProperty("java.vendor")
         );
     }
