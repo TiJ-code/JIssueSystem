@@ -8,7 +8,5 @@ void main() {
 
     JIssueSystem issueSystem = new JIssueSystem("TiJ-code", "JIssueSystem", pat);
     issueSystem.report("Test", "Hallo")
-            .thenAccept(status -> {
-                System.out.println(status);
-            }).join();
+            .thenAccept(System.out::println).join();
 }

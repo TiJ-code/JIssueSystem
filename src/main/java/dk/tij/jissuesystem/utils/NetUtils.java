@@ -1,0 +1,16 @@
+package dk.tij.jissuesystem.utils;
+
+public final class NetUtils {
+    private NetUtils() {}
+
+    private static final String EMPTY = "";
+
+    public static String escape(String input) {
+        if (input == null || input.isEmpty())
+            return EMPTY;
+
+        return input.replace("\"", "\\\"")
+                .replace("\\", "\\\\")
+                .replace("\n", "\\n");
+    }
+}
