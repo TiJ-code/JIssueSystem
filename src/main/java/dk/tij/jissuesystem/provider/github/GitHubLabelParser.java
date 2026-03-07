@@ -1,5 +1,6 @@
 package dk.tij.jissuesystem.provider.github;
 
+import dk.tij.jissuesystem.api.ILabelParser;
 import dk.tij.jissuesystem.api.Label;
 
 import java.util.HashSet;
@@ -19,9 +20,26 @@ import java.util.regex.Pattern;
  *
  * @since 0.2.0
  */
-public class GitHubLabelParser {
+public class GitHubLabelParser implements ILabelParser {
     private static final Pattern NAME_PATTERN =
             Pattern.compile("\"name\"\\s*:\\s*\"([^\"]+)\"");
+
+    /**
+     * Creates a new {@link GitHubLabelParser} instance.
+     *
+     * <p>This parser can be used to extract label names from GitHub API JSON responses
+     * and convert them into {@link Label} objects.</p>
+     *
+     * <p>Typically, instances are used with a {@link ILabelParser} reference
+     * when configuring GitHub-related issue providers.</p>
+     *
+     * <p>Example usage:
+     * <pre>{@code
+     * ILabelParser parser = new GitHubLabelParser();
+     * Set<Label> labels = parser.parse(jsonResponse);
+     * }</pre>
+     */
+    public GitHubLabelParser() {}
 
     /**
      * Utility class for parsing GitHub label JSON responses.
@@ -33,9 +51,13 @@ public class GitHubLabelParser {
      * Set<Label> labels = GitHubLabelParser.parse(jsonResponse);
      * }</pre>
      *
+     * @param json the JSON response content
+     * @return a set of {@link Label} objects
+     *
      * @since 0.0.2
      */
-    public static Set<Label> parse(String json) {
+    @Override
+    public Set<Label> parse(String json) {
         Set<Label> labels = new HashSet<>();
 
         Matcher matcher = NAME_PATTERN.matcher(json);

@@ -58,6 +58,18 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
     private URI labelsEndpoint;
     private URI issueEndpoint;
 
+    /**
+     * Constructs a new {@link GenericProvider} with the specified repository context
+     * and authentication token.
+     *
+     * <p>Initialises default label parser ({@link GenericLabelParser}) and payload builder
+     * ({@link GenericPayloadBuilder}).</p>
+     *
+     * @param owner the repository owner, organisation, or namespace
+     * @param repo the repository or project name
+     * @param token the authentication token for API requests
+     * @throws IllegalArgumentException if any of the parameters are {@code null} or blank
+     */
     protected GenericProvider(String owner, String repo, String token) {
         super(owner, repo, token);
         this.labelParser = new GenericLabelParser();
@@ -175,6 +187,14 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
         private URI labelsEndpoint,  issueEndpoint;
         private ILabelParser labelParser;
         private IPayloadBuilder payloadBuilder;
+
+        /**
+         * Creates a new {@link Builder} instance for constructing a {@link GenericProvider}.
+         *
+         * <p>Use the builder methods to configure repository information, endpoints,
+         * and optional custom parsers or payload builders before calling {@link #build()}.</p>
+         */
+        public Builder() {}
 
         /**
          * Sets the repository owner, organisation or namespace

@@ -76,6 +76,8 @@ public class LabelContract {
 
     /**
      * Returns all required label names.
+     *
+     * @return the set of required labels
      */
     public Set<String> getRequiredLabels() {
         return requiredLabels;
