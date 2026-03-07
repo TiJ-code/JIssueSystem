@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
  * @since 0.2.0
  */
 public class GitHubLabelParser {
-
     private static final Pattern NAME_PATTERN =
             Pattern.compile("\"name\"\\s*:\\s*\"([^\"]+)\"");
 

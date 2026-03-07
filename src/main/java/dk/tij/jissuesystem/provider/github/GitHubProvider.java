@@ -1,5 +1,6 @@
 package dk.tij.jissuesystem.provider.github;
 
+import dk.tij.jissuesystem.api.AbstractTokenProvider;
 import dk.tij.jissuesystem.api.Issue;
 import dk.tij.jissuesystem.api.Label;
 import dk.tij.jissuesystem.api.IIssueProvider;
@@ -30,11 +31,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @since 0.2.0
  */
-public class GitHubProvider implements IIssueProvider {
-    private final String owner;
-    private final String repo;
-    private final String pat;
-
+public class GitHubProvider extends AbstractTokenProvider implements IIssueProvider {
     private final HttpClient client = HttpClient.newHttpClient();
 
     /**
@@ -45,9 +42,7 @@ public class GitHubProvider implements IIssueProvider {
      * @param pat personal access token
      */
     public GitHubProvider(String owner, String repo, String pat) {
-        this.owner = owner;
-        this.repo = repo;
-        this.pat = pat;
+        super(owner, repo, pat);
     }
 
     /**
@@ -65,7 +60,7 @@ public class GitHubProvider implements IIssueProvider {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Authorization", "Bearer " + pat)
+                .header("Authorization", "Bearer " + token)
                 .header("Accept", "application/vnd.github+json")
                 .header("User-Agent", "JIssueSystem")
                 .GET()
@@ -92,7 +87,7 @@ public class GitHubProvider implements IIssueProvider {
 
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Authorization", "Bearer " + pat)
+                .header("Authorization", "Bearer " + token)
                 .header("Accept", "application/vnd.github+json")
                 .header("Content-Type", "application/json")
                 .header("User-Agent", "JIssueSystem")

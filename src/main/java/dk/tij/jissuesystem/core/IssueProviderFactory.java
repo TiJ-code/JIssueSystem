@@ -3,17 +3,25 @@ package dk.tij.jissuesystem.core;
 import dk.tij.jissuesystem.api.IIssueProvider;
 import dk.tij.jissuesystem.provider.IssueProviderType;
 
+import java.util.Objects;
+
 /**
- * Factory for creating {@link IIssueProvider} instances based on the provider type.
+ * Factory for creating {@link IIssueProvider} instances.
  *
- * <p>Supports instantiating providers using reflection. Validates constructor parameters
- * before creating the provider instance.</p>
+ * <p>The factory delegates provider construction to the
+ * {@link IssueProviderType} enum, which supplies a
+ * {@link dk.tij.jissuesystem.provider.IssueProviderType.ProviderCreator}
+ * for each supported provider.</p>
  *
- * <p>Typical usage:</p>
+ * <p>Example:</p>
  * <pre>{@code
  * IIssueProvider provider = IssueProviderFactory.create(
- *      IssueProviderType.GITHUB, "owner", "repo", "token"
- * };</pre>
+ *     IssueProviderType.GITHUB,
+ *     "owner",
+ *     "repo",
+ *     "token"
+ * );
+ * }</pre>
  *
  * @since 0.2.0
  */
@@ -23,36 +31,23 @@ public class IssueProviderFactory {
     /**
      * Creates an {@link IIssueProvider} for the given type, repository, and token.
      *
-     * @param type  the type of the provider
-     * @param owner the repository owner
+     * @param type  the provider type
+     * @param owner the repository owner or organisation
      * @param repo  the repository name
      * @param token the personal access token or API token
-     * @throws NullPointerException     if {@code type} is null
-     * @throws IllegalArgumentException if {@code owner}, {@code repo}, or {@code token} are null or blank
-     * @throws RuntimeException         if the provider cannot be instantiated
-     * @return
+     * @throws UnsupportedOperationException if {@code code} is {@code NONE}
+     * @throws NullPointerException          if {@code type} is {@code null}
+     * @throws IllegalArgumentException      if {@code owner}, {@code repo}, or {@code token} are {@code null} or blank
+     * @throws RuntimeException              if the provider cannot be instantiated
+     * @return the created {@link IIssueProvider} instance
      */
     public static IIssueProvider create(IssueProviderType type, String owner, String repo, String token) {
-        if (type == null)
-            throw new NullPointerException("type cannot be null");
+        Objects.requireNonNull(type, "type cannot be null");
 
-        if (owner == null || owner.isBlank())
-            throw new IllegalArgumentException("owner cannot be null or blank");
-
-        if (repo == null || repo.isBlank())
-            throw new IllegalArgumentException("owner cannot be null or blank");
-
-        if (token == null || token.isBlank())
-            throw new IllegalArgumentException("owner cannot be null or blank");
-
-        Class<? extends IIssueProvider> providerClazz = type.providerClass;
-
-        try {
-            return providerClazz
-                    .getDeclaredConstructor(String.class, String.class, String.class)
-                    .newInstance(owner, repo, token);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to instantiate " + providerClazz.getName(), e);
+        if (IssueProviderType.NONE.equals(type)) {
+            throw new UnsupportedOperationException("Cannot create an issue provider for a NONE");
         }
+
+        return type.creator.create(owner, repo, token);
     }
 }
