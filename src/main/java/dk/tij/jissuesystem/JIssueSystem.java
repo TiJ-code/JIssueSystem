@@ -1,5 +1,6 @@
 package dk.tij.jissuesystem;
 
+import dk.tij.jissuesystem.utils.DeviceUtils;
 import dk.tij.jissuesystem.utils.NetUtils;
 
 import java.net.URI;
@@ -34,7 +35,7 @@ public class JIssueSystem {
         final String url = String.format("https://api.github.com/repos/%s/%s/dispatches", repoOwner, repoName);
 
         String escapedTitle = NetUtils.escape(title);
-        String escapedBody = NetUtils.escape(body + getDiagnostics());
+        String escapedBody = NetUtils.escape(body + DeviceUtils.getDiagnostics());
 
         String jsonPayload = String.format("""
     {
@@ -65,18 +66,5 @@ public class JIssueSystem {
                     }
                     return response.statusCode();
                 });
-    }
-
-    private static String getDiagnostics() {
-        return String.format("""
-        \n
-        ---
-        **Environment Info:**
-        * **OS:** %s (%s)
-        * **Java:** %s (%s)
-        """,
-            System.getProperty("os.title"), System.getProperty("os.arch"),
-            System.getProperty("java.version"), System.getProperty("java.vendor")
-        );
     }
 }
