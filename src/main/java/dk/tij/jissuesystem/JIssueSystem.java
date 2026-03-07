@@ -1,5 +1,7 @@
 package dk.tij.jissuesystem;
 
+import dk.tij.jissuesystem.utils.NetUtils;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -31,8 +33,8 @@ public class JIssueSystem {
     public final CompletableFuture<Integer> report(String title, String body) {
         final String url = String.format("https://api.github.com/repos/%s/%s/dispatches", repoOwner, repoName);
 
-        String escapedTitle = escape(title);
-        String escapedBody = escape(body + getDiagnostics());
+        String escapedTitle = NetUtils.escape(title);
+        String escapedBody = NetUtils.escape(body + getDiagnostics());
 
         String jsonPayload = String.format("""
     {
@@ -76,16 +78,5 @@ public class JIssueSystem {
             System.getProperty("os.title"), System.getProperty("os.arch"),
             System.getProperty("java.version"), System.getProperty("java.vendor")
         );
-    }
-
-    private static String escape(String input) {
-        if (input == null) return "";
-        return input.replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\b", "\\b")
-                .replace("\f", "\\f")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\t", "\\t");
     }
 }

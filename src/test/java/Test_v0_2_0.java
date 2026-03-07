@@ -15,6 +15,8 @@ void main() {
 
     var fetchedLabels = provider.fetchLabels().join();
 
+    System.out.println(fetchedLabels.toString().replace(", ", "\n"));
+
     if (fetchedLabels.contains(new Label("automated-report")) && fetchedLabels.size() > 3)
         System.out.println("Successfully fetched labels!");
 
@@ -23,5 +25,8 @@ void main() {
             .body("Report")
             .labels(Set.of(new Label("bug")))
             .build();
-    provider.report(issueToReport);
+
+    provider.report(issueToReport)
+            .thenAccept(System.out::println)
+            .join();
 }

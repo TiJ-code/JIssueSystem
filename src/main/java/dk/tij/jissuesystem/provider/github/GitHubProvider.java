@@ -46,7 +46,7 @@ public class GitHubProvider implements IIssueProvider {
     }
 
     @Override
-    public CompletableFuture<Integer> report(Issue issue) {
+    public CompletableFuture<HttpResponse<String>> report(Issue issue) {
         String url = String.format(
                 "https://api.github.com/repos/%s/%s/dispatches",
                 owner, repo
@@ -63,7 +63,6 @@ public class GitHubProvider implements IIssueProvider {
                 .POST(HttpRequest.BodyPublishers.ofString(payload))
                 .build();
 
-        return client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::statusCode);
+        return client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
     }
 }

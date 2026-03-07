@@ -30,13 +30,13 @@ public class GitHubPayloadBuilder implements IPayloadBuilder {
     public String buildPayload(Issue issue) {
         final String labelPayload = issue.labels()
                 .stream()
-                .map(l -> String.format("\"%s\"", l))
+                .map(l -> "\"" + NetUtils.escape(l.name()) + "\"")
                 .collect(Collectors.joining(","));
 
         return String.format(JSON_PAYLOAD,
                 NetUtils.escape(issue.title()),
                 NetUtils.escape(issue.body()),
-                NetUtils.escape(labelPayload)
+                labelPayload
         );
     }
 }
