@@ -40,6 +40,10 @@ public class LabelContract {
         return requiredLabels.contains(label.name());
     }
 
+    public Set<String> getRequiredLabels() {
+        return requiredLabels;
+    }
+
     public static LabelContract githubDefault() {
         return DEFAULT_CONTRACT.concat(new LabelContract(Set.of("enhancement", "bug", "duplicate")));
     }

@@ -2,10 +2,13 @@ package dk.tij.jissuesystem.core;
 
 import dk.tij.jissuesystem.api.IIssueProvider;
 import dk.tij.jissuesystem.api.Issue;
+import dk.tij.jissuesystem.api.Label;
 import dk.tij.jissuesystem.provider.IssueProviderType;
 import dk.tij.jissuesystem.utils.DeviceUtils;
 
 import java.net.http.HttpResponse;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class IssueReporter {
@@ -46,14 +49,17 @@ public class IssueReporter {
         return contract;
     }
 
-    private static Issue enrich(Issue issue) {
+    private Issue enrich(Issue issue) {
+        Set<Label> labels = new HashSet<>(issue.labels());
+        contract.getRequiredLabels().forEach(r -> labels.add(new Label(r)));
+
         final String enrichedBody = "%s\n%s"
                 .formatted(issue.body(), DeviceUtils.getDiagnostics());
 
         return new Issue.Builder()
                 .title(issue.title())
                 .body(enrichedBody)
-                .labels(issue.labels())
+                .labels(labels)
                 .build();
     }
 
@@ -79,7 +85,7 @@ public class IssueReporter {
             if (this.contract == null)
                 this.contract = contract;
             else
-                this.contract.concat(contract);
+                this.contract = this.contract.concat(contract);
             return this;
         }
 

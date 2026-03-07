@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5b1fc9a-cbdf-4ae7-91f6-279f177b5f4e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/JIssueSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/JIssueSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/api/IIssueProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/api/IIssueProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/core/IssueReporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/core/IssueReporter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/provider/github/GitHubPayloadBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/provider/github/GitHubPayloadBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/provider/github/GitHubProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/provider/github/GitHubProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/utils/NetUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dk/tij/jissuesystem/utils/NetUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Test_v0_2_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Test_v0_2_0.java" afterDir="false" />
-    </list>
+    <list default="true" id="b5b1fc9a-cbdf-4ae7-91f6-279f177b5f4e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,6 +59,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunAnythingCache">
