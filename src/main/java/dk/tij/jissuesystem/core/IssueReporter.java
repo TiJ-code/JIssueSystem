@@ -11,17 +11,39 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * High-level utility for reporting issues to a repository via an {@link IIssueProvider}.
+ *
+ * <p>Manages initialisation, label validation, and automatic enrichment of issue
+ * bodies with diagnostic information.</p>
+ *
+ * <p>Supports a fluent {@link Builder} for convenient construction.</p>
+ *
+ * @since 0.2.0
+ */
 public class IssueReporter {
     private final IIssueProvider provider;
     private final LabelContract contract;
 
     private volatile boolean initialised  = false;
 
+    /**
+     * Creates a new {@link IssueReporter}
+     *
+     * @param provider the issue provider
+     * @param contract the label contract to enforce
+     */
     public IssueReporter(IIssueProvider provider, LabelContract contract) {
         this.provider = provider;
         this.contract = contract;
     }
 
+    /**
+     * Initialises the reporter by fetching repository labels and validating them
+     * against the contract.
+     *
+     * @return a {@link CompletableFuture} that completes when initialisation finishes
+     */
     public CompletableFuture<Void> initialise() {
         return provider.fetchLabels()
                 .thenAccept(labels -> {
@@ -30,6 +52,13 @@ public class IssueReporter {
                 });
     }
 
+    /**
+     * Reports an issue after enriching it with diagnostics and validating against contract
+     *
+     * @param issue the issue to report
+     * @return a {@link CompletableFuture} with the HTTP response
+     * @throws IllegalStateException if the reporter is not initialised
+     */
     public CompletableFuture<HttpResponse<String>> report(Issue issue) {
         if (!initialised) {
             throw new IllegalStateException("Reporter not initialised");
@@ -41,14 +70,25 @@ public class IssueReporter {
         return provider.report(enriched);
     }
 
+    /**
+     * Returns the underlying provider
+     */
     public IIssueProvider getProvider() {
         return provider;
     }
 
+    /**
+     * Returns the label contract.
+     */
     public LabelContract getContract() {
         return contract;
     }
 
+    /**
+     * Enriches an issue with required labels and device diagnostics.
+     * @param issue the issue to enrich
+     * @return the enriched issue
+     */
     private Issue enrich(Issue issue) {
         Set<Label> labels = new HashSet<>(issue.labels());
         contract.getRequiredLabels().forEach(r -> labels.add(new Label(r)));
@@ -63,24 +103,52 @@ public class IssueReporter {
                 .build();
     }
 
+    /**
+     * Returns a new builder for {@link IssueReporter}
+     * @return a new issue reporter
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder class for {@link IssueReporter} with fluent API.
+     */
     public static class Builder {
         private IIssueProvider provider;
         private LabelContract contract;
 
+        /**
+         * Sets the provider instance directly.
+         *
+         * @param provider the provider
+         * @return this builder
+         */
         public Builder provider(IIssueProvider provider) {
             this.provider = provider;
             return this;
         }
 
+        /**
+         * Sets the provider via type, owner, repo, and token.
+         *
+         * @param type  the provider type
+         * @param owner the repository owner
+         * @param repo  the repository name
+         * @param token the personal access token or API token
+         * @return this builder
+         */
         public Builder provider(IssueProviderType type, String owner, String repo, String token) {
             this.provider = IssueProviderFactory.create(type, owner, repo, token);
             return this;
         }
 
+        /**
+         * Sets or merges a {@link LabelContract}
+         *
+         * @param contract the contract to set or merge
+         * @return this builder
+         */
         public Builder contract(LabelContract contract) {
             if (this.contract == null)
                 this.contract = contract;
@@ -89,6 +157,10 @@ public class IssueReporter {
             return this;
         }
 
+        /**
+         * Builds the {@link IssueReporter}
+         * @return the issue reporter
+         */
         public IssueReporter build() {
             if (provider == null)
                 throw new IllegalStateException("Provider must be set");

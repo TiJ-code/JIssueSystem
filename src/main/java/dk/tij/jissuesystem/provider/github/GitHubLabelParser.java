@@ -7,11 +7,35 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for parsing GitHub label JSON responses.
+ *
+ * <p>Extracts label names from GitHub API responses and converts them into {@link Label} objects.
+ *
+ * <p>Example usage:
+ * <pre>{@code
+ * Set<Label> labels = GitHubLabelParser.parse(jsonResponse);
+ * }</pre>
+ *
+ * @since 0.2.0
+ */
 public class GitHubLabelParser {
 
     private static final Pattern NAME_PATTERN =
             Pattern.compile("\"name\"\\s*:\\s*\"([^\"]+)\"");
 
+    /**
+     * Utility class for parsing GitHub label JSON responses.
+     *
+     * <p>Extracts label names from GitHub API responses and converts them into {@link Label} objects.
+     *
+     * <p>Example usage:
+     * <pre>{@code
+     * Set<Label> labels = GitHubLabelParser.parse(jsonResponse);
+     * }</pre>
+     *
+     * @since 0.0.2
+     */
     public static Set<Label> parse(String json) {
         Set<Label> labels = new HashSet<>();
 

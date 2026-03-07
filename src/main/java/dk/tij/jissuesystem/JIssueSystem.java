@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
  * @author tij
  * @since 0.1.0
  */
-@Deprecated(since = "0.0.2")
+@Deprecated(since = "0.2.0")
 public class JIssueSystem {
     private final IssueReporter reporter;
 
@@ -31,7 +31,7 @@ public class JIssueSystem {
     /**
      * Legacy static method, mimics old usage
      */
-    @Deprecated(since = "0.0.2")
+    @Deprecated(since = "0.2.0")
     public static CompletableFuture<Integer> report(String repoOwner, String repoName, String pat, String title, String body) {
         return new JIssueSystem(repoOwner, repoName, pat).report(title, body);
     }
@@ -39,7 +39,7 @@ public class JIssueSystem {
     /**
      * Legacy static method, mimics old usage
      */
-    @Deprecated(since = "0.0.2")
+    @Deprecated(since = "0.2.0")
     public final CompletableFuture<Integer> report(String title, String body) {
         Issue issue = new Issue.Builder()
                 .title(title)
