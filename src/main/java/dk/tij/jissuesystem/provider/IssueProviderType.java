@@ -1,34 +1,57 @@
 package dk.tij.jissuesystem.provider;
 
 import dk.tij.jissuesystem.api.IIssueProvider;
+import dk.tij.jissuesystem.provider.generic.GenericProvider;
 import dk.tij.jissuesystem.provider.github.GitHubProvider;
 
 /**
- * Enum representing the types of issue providers supported by the system.
+ * Enumerates the supported issue provider types.
  *
- * <p>Each enum value may be associated with a concrete {@link IIssueProvider} implementation.
- * The factory {@link dk.tij.jissuesystem.core.IssueProviderFactory} uses this type to
- * instantiate the correct provider.
+ * <p>Each value supplies a {@link ProviderCreator} used to instantiate
+ * the corresponding {@link IIssueProvider} implementation.</p>
  *
- * <p>Example usage:
+ * <p>This enum is primarily used by
+ * {@link dk.tij.jissuesystem.core.IssueProviderFactory} to create provider
+ * instances without exposing implementation classes.</p>
+ *
+ * <p>Example:</p>
  * <pre>{@code
  * IIssueProvider provider = IssueProviderFactory.create(
- *     IssueProviderType.GITHUB, "owner", "repo", "token"
+ *     IssueProviderType.GITHUB,
+ *     "owner",
+ *     "repo",
+ *     "token"
  * );
  * }</pre>
  *
  * @since 0.2.0
  */
 public enum IssueProviderType {
-    /** Placeholder for an unsupported or custom provider. */
-    OTHER(null),
+    /** Invalid issue provider type. */
+    NONE(null),
     /** GitHub issue provider. */
-    GITHUB(GitHubProvider.class);
+    GITHUB(GitHubProvider::new);
 
-    /** The class implementing {@link IIssueProvider} for this type */
-    public final Class<? extends IIssueProvider> providerClass;
+    /** Factory used to create the provider instance for this type. */
+    public final ProviderCreator creator;
 
-    IssueProviderType(Class<? extends IIssueProvider> providerClass) {
-        this.providerClass = providerClass;
+    IssueProviderType(ProviderCreator creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * Functional interface used to construct {@link IIssueProvider} instances.
+     */
+    @FunctionalInterface
+    public interface ProviderCreator {
+        /**
+         * Creates a new issue provider.
+         *
+         * @param owner repository owner or organization
+         * @param repo  repository name
+         * @param token authentication token
+         * @return a configured {@link IIssueProvider}
+         */
+        IIssueProvider create(String owner, String repo, String token);
     }
 }
