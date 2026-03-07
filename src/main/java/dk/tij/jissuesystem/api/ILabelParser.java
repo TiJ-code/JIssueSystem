@@ -24,5 +24,5 @@ public interface ILabelParser {
      * @param rawLabels the raw string containing label information, e.g., "bug, enhancement"
      * @return a set of {@link Label} objects representing the parsed labels
      */
-    Set<Label> parse(String rawLabels);
+    Set<Label> parseLabels(String rawLabels);
 }

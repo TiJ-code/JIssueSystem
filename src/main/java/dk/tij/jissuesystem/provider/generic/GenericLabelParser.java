@@ -56,7 +56,7 @@ public class GenericLabelParser implements ILabelParser {
      * @return a set of parsed {@link Label} objects
      */
     @Override
-    public Set<Label> parse(String rawLabels) {
+    public Set<Label> parseLabels(String rawLabels) {
         return parser.apply(rawLabels);
     }
 

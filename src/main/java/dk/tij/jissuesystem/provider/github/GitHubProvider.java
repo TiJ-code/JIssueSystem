@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 0.2.0
  */
 public class GitHubProvider extends AbstractTokenProvider implements IIssueProvider {
-    private final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpClient client = HttpClient.newHttpClient();
 
     /**
      * Constructs a GitHubProvider for the given repository and access token.
@@ -69,7 +68,7 @@ public class GitHubProvider extends AbstractTokenProvider implements IIssueProvi
                 .build();
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(r -> labelParser.parse(r.body()));
+                .thenApply(r -> labelParser.parseLabels(r.body()));
     }
 
     /**

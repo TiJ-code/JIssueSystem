@@ -20,6 +20,14 @@ import java.util.concurrent.CompletableFuture;
 public class JIssueSystem {
     private final IssueReporter reporter;
 
+    /**
+     * Creates a new instance of the reporting system
+     *
+     * @param repoOwner the repository owner
+     * @param repoName  the repository name
+     * @param pat the personal access token or API token
+     */
+    @Deprecated(since = "0.2.0")
     public JIssueSystem(String repoOwner, String repoName, String pat) {
         this.reporter = IssueReporter.builder()
                 .provider(IssueProviderType.GITHUB, repoOwner, repoName, pat)
@@ -30,6 +38,13 @@ public class JIssueSystem {
 
     /**
      * Legacy static method, mimics old usage
+     *
+     * @param repoOwner the repository owner
+     * @param repoName the repository name
+     * @param pat the personal access token or API token
+     * @param title the issue title
+     * @param body the issue body
+     * @return a {@link CompletableFuture} with the status code
      */
     @Deprecated(since = "0.2.0")
     public static CompletableFuture<Integer> report(String repoOwner, String repoName, String pat, String title, String body) {
@@ -38,6 +53,10 @@ public class JIssueSystem {
 
     /**
      * Legacy static method, mimics old usage
+     *
+     * @param title the issue title
+     * @param body the issue body
+     * @return a {@link CompletableFuture} with the status code
      */
     @Deprecated(since = "0.2.0")
     public final CompletableFuture<Integer> report(String title, String body) {

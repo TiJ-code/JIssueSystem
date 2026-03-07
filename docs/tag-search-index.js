@@ -1,0 +1,1 @@
+tagSearchIndex = [{"l":"Configuration","h":"class dk.tij.jissuesystem.provider.generic.GenericProvider","k":"16","u":"dk.tij.jissuesystem/dk/tij/jissuesystem/provider/generic/GenericProvider.html#configuration-heading"}];updateSearchResults();

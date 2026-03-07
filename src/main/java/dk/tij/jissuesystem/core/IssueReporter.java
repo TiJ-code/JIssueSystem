@@ -72,6 +72,8 @@ public class IssueReporter {
 
     /**
      * Returns the underlying provider
+     *
+     * @return the {@link IIssueProvider} instance
      */
     public IIssueProvider getProvider() {
         return provider;
@@ -79,6 +81,8 @@ public class IssueReporter {
 
     /**
      * Returns the label contract.
+     *
+     * @return the {@link LabelContract} instance
      */
     public LabelContract getContract() {
         return contract;
@@ -117,6 +121,22 @@ public class IssueReporter {
     public static class Builder {
         private IIssueProvider provider;
         private LabelContract contract;
+
+        /**
+         * Creates a new {@link Builder} instance for constructing an {@link IssueReporter}.
+         *
+         * <p>Use the builder methods to configure the issue provider and label contract
+         * before calling {@link #build()} to create the reporter instance.</p>
+         *
+         * <p>Example usage:</p>
+         * <pre>{@code
+         * IssueReporter reporter = IssueReporter.builder()
+         *     .provider(IssueProviderType.GITHUB, "owner", "repo", "token")
+         *     .contract(LabelContract.DEFAULT_CONTRACT)
+         *     .build();
+         * }</pre>
+         */
+        public Builder() {}
 
         /**
          * Sets the provider instance directly.
