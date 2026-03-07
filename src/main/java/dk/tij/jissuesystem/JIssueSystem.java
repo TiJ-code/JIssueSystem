@@ -1,84 +1,80 @@
 package dk.tij.jissuesystem;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
+import dk.tij.jissuesystem.api.Issue;
+import dk.tij.jissuesystem.api.Label;
+import dk.tij.jissuesystem.core.IssueReporter;
+import dk.tij.jissuesystem.core.LabelContract;
+import dk.tij.jissuesystem.provider.IssueProviderType;
 import java.net.http.HttpResponse;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Legacy wrapper for pre-0.2.0 usage.
+ * Internally uses IssueReporter and GitHubProver for 0.2.0 API.
+ *
+ * @author tij
+ * @since 0.1.0
+ */
+@Deprecated(since = "0.2.0")
 public class JIssueSystem {
-    private final String repoOwner;
-    private final String repoName;
-    private final String pat;
+    private final IssueReporter reporter;
 
+    /**
+     * Creates a new instance of the reporting system
+     *
+     * @param repoOwner the repository owner
+     * @param repoName  the repository name
+     * @param pat the personal access token or API token
+     */
+    @Deprecated(since = "0.2.0")
     public JIssueSystem(String repoOwner, String repoName, String pat) {
-        this.repoOwner = repoOwner;
-        this.repoName = repoName;
-        this.pat = pat;
+        this.reporter = IssueReporter.builder()
+                .provider(IssueProviderType.GITHUB, repoOwner, repoName, pat)
+                .contract(LabelContract.DEFAULT_CONTRACT)
+                .build();
+        this.reporter.initialise().join();
     }
 
+    /**
+     * Legacy static method, mimics old usage
+     *
+     * @param repoOwner the repository owner
+     * @param repoName the repository name
+     * @param pat the personal access token or API token
+     * @param title the issue title
+     * @param body the issue body
+     * @return a {@link CompletableFuture} with the status code
+     */
+    @Deprecated(since = "0.2.0")
     public static CompletableFuture<Integer> report(String repoOwner, String repoName, String pat, String title, String body) {
         return new JIssueSystem(repoOwner, repoName, pat).report(title, body);
     }
 
+    /**
+     * Legacy static method, mimics old usage
+     *
+     * @param title the issue title
+     * @param body the issue body
+     * @return a {@link CompletableFuture} with the status code
+     */
+    @Deprecated(since = "0.2.0")
     public final CompletableFuture<Integer> report(String title, String body) {
-        final String url = String.format("https://api.github.com/repos/%s/%s/dispatches", repoOwner, repoName);
-
-        String escapedTitle = escape(title);
-        String escapedBody = escape(body + getDiagnostics());
-
-        String jsonPayload = String.format("""
-    {
-        "event_type": "create-issue",
-        "client_payload": {
-            "title": "%s",
-            "body": "%s"
-        }
-    }
-    """, escapedTitle, escapedBody);
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Authorization", "Bearer " + pat.trim())
-                .header("Accept", "application/vnd.github+json")
-                .header("X-GitHub-Api-Version", "2022-11-28")
-                .header("Content-Type", "application/json")
-                .header("User-Agent", "JIssueSystem-Library")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+        Issue issue = new Issue.Builder()
+                .title(title)
+                .body(body)
+                .labels(Set.of(new Label("automated-report")))
                 .build();
 
-        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    System.out.println(response);
-                    if (response.statusCode() >= 400) {
-                        System.err.println("GitHub Message: " + response.body());
-                    }
-                    return response.statusCode();
-                });
+        return reporter.report(issue).thenApply(HttpResponse::statusCode);
     }
 
-    private static String getDiagnostics() {
-        return String.format("""
-        \n
-        ---
-        **Environment Info:**
-        * **OS:** %s (%s)
-        * **Java:** %s (%s)
-        """,
-            System.getProperty("os.name"), System.getProperty("os.arch"),
-            System.getProperty("java.version"), System.getProperty("java.vendor")
-        );
-    }
-
-    private static String escape(String input) {
-        if (input == null) return "";
-        return input.replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\b", "\\b")
-                .replace("\f", "\\f")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\t", "\\t");
+    /**
+     * Returns the internal {@link IssueReporter} instance used for issue reporting
+     *
+     * @return the {@link IssueReporter} instance
+     */
+    public IssueReporter reporter() {
+        return reporter;
     }
 }
