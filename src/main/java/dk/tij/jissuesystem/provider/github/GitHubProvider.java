@@ -12,6 +12,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * GitHub issue provider implementation for the {@link IIssueProvider} interface.
+ *
+ * <p>Supports:
+ * <ul>
+ *     <li>Fetching all labels of a repository via {@code /labels} endpoint</li>
+ *     <li>Reporting issues via the {@code repository_dispatch} event</li>
+ * </ul>
+ *
+ * <p>Example usage:
+ * <pre>{@code
+ * IIssueProvider provider = new GitHubProvider("owner", "repo", "PAT");
+ * Set<Label> labels = provider.fetchLabels().join();
+ * HttpResponse<String> response = provider.report(issue).join();
+ * }</pre>
+ *
+ * @since 0.2.0
+ */
 public class GitHubProvider implements IIssueProvider {
     private final String owner;
     private final String repo;
@@ -19,12 +37,24 @@ public class GitHubProvider implements IIssueProvider {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
+    /**
+     * Constructs a GitHubProvider for the given repository and access token.
+     *
+     * @param owner repository owner
+     * @param repo repository name
+     * @param pat personal access token
+     */
     public GitHubProvider(String owner, String repo, String pat) {
         this.owner = owner;
         this.repo = repo;
         this.pat = pat;
     }
 
+    /**
+     * Fetches all labels of the repository.
+     *
+     * @return a {@link CompletableFuture} containing a set of {@link Label} objects
+     */
     @Override
     public CompletableFuture<Set<Label>> fetchLabels() {
 
@@ -45,6 +75,12 @@ public class GitHubProvider implements IIssueProvider {
                 .thenApply(r -> GitHubLabelParser.parse(r.body()));
     }
 
+    /**
+     * Reports an issue to the repository via the {@code repository_dispatch} event.
+     *
+     * @param issue the issue to report
+     * @return a {@link CompletableFuture} containing the HTTP response
+     */
     @Override
     public CompletableFuture<HttpResponse<String>> report(Issue issue) {
         String url = String.format(
