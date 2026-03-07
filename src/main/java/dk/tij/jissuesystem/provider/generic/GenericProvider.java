@@ -1,9 +1,6 @@
 package dk.tij.jissuesystem.provider.generic;
 
-import dk.tij.jissuesystem.api.AbstractTokenProvider;
-import dk.tij.jissuesystem.api.IIssueProvider;
-import dk.tij.jissuesystem.api.Issue;
-import dk.tij.jissuesystem.api.Label;
+import dk.tij.jissuesystem.api.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,7 +9,6 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * A configurable {@link IIssueProvider} implementation for interacting with
@@ -58,9 +54,6 @@ import java.util.function.Function;
  */
 public class GenericProvider extends AbstractTokenProvider implements IIssueProvider {
     private static final HttpClient CLIENT =  HttpClient.newHttpClient();
-
-    public final GenericLabelParser labelParser;
-    public final GenericPayloadBuilder payloadBuilder;
 
     private URI labelsEndpoint;
     private URI issueEndpoint;
@@ -180,8 +173,8 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
     public static class Builder {
         private String owner, repo, token;
         private URI labelsEndpoint,  issueEndpoint;
-        private Function<String, Set<Label>> labelParser;
-        private Function<Issue, String> payloadBuilder;
+        private ILabelParser labelParser;
+        private IPayloadBuilder payloadBuilder;
 
         /**
          * Sets the repository owner, organisation or namespace
@@ -246,7 +239,7 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
          *               set of {@link Label} objects
          * @return this builder
          */
-        public Builder labelParser(Function<String, Set<Label>> parser) {
+        public Builder labelParser(ILabelParser parser) {
             this.labelParser = parser;
             return this;
         }
@@ -259,7 +252,7 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
          *                       into a JSON request payload
          * @return this builder
          */
-        public Builder payloadBuilder(Function<Issue, String> payloadBuilder) {
+        public Builder payloadBuilder(IPayloadBuilder payloadBuilder) {
             this.payloadBuilder = payloadBuilder;
             return this;
         }
@@ -281,10 +274,10 @@ public class GenericProvider extends AbstractTokenProvider implements IIssueProv
             GenericProvider provider = new GenericProvider(owner, repo, token).configure(labelsEndpoint, issueEndpoint);
 
             if (labelParser != null)
-                provider.labelParser.setParser(labelParser);
+                provider.labelParser(labelParser);
 
             if (payloadBuilder != null)
-                provider.payloadBuilder.setBuilder(payloadBuilder);
+                provider.payloadBuilder(payloadBuilder);
 
             return provider;
         }

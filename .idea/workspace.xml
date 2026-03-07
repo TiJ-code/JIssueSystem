@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5b1fc9a-cbdf-4ae7-91f6-279f177b5f4e" name="Changes" comment="" />
+    <list default="true" id="b5b1fc9a-cbdf-4ae7-91f6-279f177b5f4e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/test/java/GitHubProviderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/GitHubProviderTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Test_v0_1_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Test_v0_1_0.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +21,8 @@
         <option value="AnnotationType" />
         <option value="Enum" />
         <option value="Interface" />
+        <option value="GitHub Workflow" />
+        <option value="package-info" />
         <option value="Class" />
       </list>
     </option>
@@ -33,31 +38,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.JIssueSystem.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.Test_v0_2_0.executor": "Run",
-    "Maven.jissuesystem [clean,package].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/tij/Development/JIssueSystem/src/main/resources",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/home/tij/Development/JIssueSystem/src/main/java/dk/tij/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "discord-project",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.JIssueSystem.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Test_v0_2_0.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Test_v0_2_0_generic.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jissuesystem [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jissuesystem [clean,package].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/tij/Development/JIssueSystem/src/test/java&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/home/tij/Development/JIssueSystem/src/main/java/dk/tij/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;discord-project&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/java" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -66,10 +74,11 @@
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
+      <command value="mvn clean install" />
       <command value="mvn clean package" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.Test_v0_2_0">
+  <component name="RunManager" selected="Application.Test_v0_2_0_generic">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="UNNAMED_CLASS_CONFIGURATION" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -86,8 +95,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test_v0_2_0_generic" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="UNNAMED_CLASS_CONFIGURATION" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Test_v0_2_0_generic" />
+      <module name="jissuesystem" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test_v0_2_0_generic" />
         <item itemvalue="Application.Test_v0_2_0" />
         <item itemvalue="Application.Main" />
       </list>
@@ -121,10 +139,22 @@
       <workItem from="1772823757204" duration="33000" />
       <workItem from="1772823799200" duration="187000" />
       <workItem from="1772824053963" duration="8270000" />
+      <workItem from="1772887461825" duration="1973000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

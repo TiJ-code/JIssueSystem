@@ -26,11 +26,30 @@ jobs:
         env:
           LABELS: ${{ join(github.event.client_payload.labels, ',') }}
 
-      - name: Open Issue
+      - name: Debug Mode
+        shell: bash
         run: |
-          gh issue create --title "$TITLE" --body "$BODY" --label "$FINAL_LABELS"
+          echo "Test mode $TEST_MODE"
+          echo "Title: $TITLE"
+          echo "Body: $BODY"
+          echo "Labels: $LABELS"
+          
+          if [ "${TEST_MODE,,}" = "true" ]; then
+            echo "Test mode enabled - skipping actual issue creation."
+            exit 0
+          fi
+        env:
+          TEST_MODE: ${{ github.event.client_payload.test_mode }}
+          TITLE: ${{ github.event.client_payload.title }}
+          BODY: ${{ github.event.client_payload.body }}
+          LABELS: ${{ join(github.event.client_payload.labels, ',') }}
+
+      - name: Open Issue
+        if: ${{ github.event.client_payload.test_mode != 'true' }}
+        run: |
+          gh issue create --title "$TITLE" --body "$BODY" --label "$LABELS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TITLE: ${{ github.event.client_payload.title }}
           BODY: ${{ github.event.client_payload.body }}
-          FINAL_LABELS: ${{ steps.labels.outputs.VALUE }}
+          LABELS: ${{ join(github.event.client_payload.labels, ',') }}
