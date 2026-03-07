@@ -56,6 +56,23 @@ public class Issue {
         private Set<Label> labels;
 
         /**
+         * Creates a new {@link Builder} instance for constructing an {@link Issue}.
+         *
+         * <p>Use the builder methods to set the issue title, body, and labels,
+         * then call {@link #build()} to create an immutable {@link Issue} object.</p>
+         *
+         * <p>Example usage:</p>
+         * <pre>{@code
+         * Issue issue = new Issue.Builder()
+         *     .title("Bug found")
+         *     .body("Description of the bug")
+         *     .labels(Set.of(new Label("bug")))
+         *     .build();
+         * }</pre>
+         */
+        public Builder() {}
+
+        /**
          * Sets the title of the issue
          *
          * @param title the issue title
@@ -86,7 +103,7 @@ public class Issue {
          */
         public Builder labels(Class<? extends ILabelParser> labelParser, String raw) {
             try {
-                return labels(labelParser.getDeclaredConstructor().newInstance().parse(raw));
+                return labels(labelParser.getDeclaredConstructor().newInstance().parseLabels(raw));
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException("Failed to instantiate label parser", e);
             }

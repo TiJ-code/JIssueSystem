@@ -1,0 +1,8 @@
+module:dk.tij.jissuesystem
+dk.tij.jissuesystem
+dk.tij.jissuesystem.api
+dk.tij.jissuesystem.core
+dk.tij.jissuesystem.provider
+dk.tij.jissuesystem.provider.generic
+dk.tij.jissuesystem.provider.github
+dk.tij.jissuesystem.utils
