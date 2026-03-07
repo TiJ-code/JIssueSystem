@@ -24,7 +24,7 @@ jobs:
             echo "VALUE=$BASE,$LABELS" >> $GITHUB_OUTPUT
           fi
         env:
-          LABELS: ${{ github.event.client_payload.labels }}
+          LABELS: ${{ join(github.event.client_payload.labels, ',') }}
 
       - name: Open Issue
         run: |
