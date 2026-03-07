@@ -29,4 +29,31 @@ public interface IIssueProvider {
      * @return a {@link CompletableFuture} that resolves to the HTTP response from the provider
      */
     CompletableFuture<HttpResponse<String>> report(Issue issue);
+
+    /**
+     * Sets the payload builder used to construct API request payloads.
+     *
+     * @param payloadBuilder the {@link IPayloadBuilder} implementation
+     */
+    void payloadBuilder(IPayloadBuilder payloadBuilder);
+
+    /**
+     * Returns the currently configured payload builder
+     *
+     * @return the {@link IPayloadBuilder} instance used by this provider
+     */
+    IPayloadBuilder payloadBuilder();
+
+    /**
+     * Sets the label parser used to parse labels from API response.
+     *
+     * @param payloadBuilder the {@link ILabelParser} implementation
+     */
+    void labelParser(ILabelParser payloadBuilder);
+
+    /**
+     * Returns the currently configured label parser
+     * @return the {@link ILabelParser} instance used by this provider
+     */
+    ILabelParser labelParser();
 }

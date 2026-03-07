@@ -49,4 +49,13 @@ public class JIssueSystem {
 
         return reporter.report(issue).thenApply(HttpResponse::statusCode);
     }
+
+    /**
+     * Returns the internal {@link IssueReporter} instance used for issue reporting
+     *
+     * @return the {@link IssueReporter} instance
+     */
+    public IssueReporter reporter() {
+        return reporter;
+    }
 }

@@ -1,26 +1,13 @@
 package dk.tij.jissuesystem.api;
 
 /**
- * Base implementation for {@link IIssueProvider} implementations that
- * authenticate using a token.
+ * Abstract base class for token-based {@link IIssueProvider} implementations.
  *
- * <p>This abstract class stores the common repository context required by most
- * issue tracking APIs:</p>
+ * <p>Stores repository context and authentication token for subclasses. Provides
+ * default implementations for managing payload builders and label parsers.</p>
  *
- * <ul>
- *     <li><b>owner</b> - The repository owner, organisation, or namespace.</li>
- *     <li><b>repo</b> - The repository or project name.</li>
- *     <li><b>token</b> - The authentication token used for API requests.</li>
- * </ul>
- *
- * <p>Subclasses are responsible for implementing the actual communication
- * with the issue provider API.</p>
- *
- * <p>This class performs basic validation to ensure none of the required
- * values are {@code null} or blank.</p>
- *
- * <p>Typical subclasses include providers for services such as GitHub,
- * GitLab, or custom APIs.</p>
+ * <p>Subclasses are responsible for implementing API-specific communication
+ * to fetch labels and report issues.</p>
  *
  * @see IIssueProvider
  */
@@ -31,6 +18,11 @@ public abstract class AbstractTokenProvider implements IIssueProvider {
     protected final String repo;
     /** Authentication token used for API requests */
     protected final String token;
+
+    /** Builder used to construct API request payloads */
+    protected IPayloadBuilder payloadBuilder;
+    /** Parser used to extract labels from API responses */
+    protected ILabelParser labelParser;
 
     /**
      * Creates a new token-based issue providers.
@@ -54,5 +46,45 @@ public abstract class AbstractTokenProvider implements IIssueProvider {
         this.owner = owner;
         this.repo = repo;
         this.token = token;
+    }
+
+    /**
+     * Sets the payload builder used to construct API request payloads.
+     *
+     * @param payloadBuilder the {@link IPayloadBuilder} to use
+     */
+    @Override
+    public void payloadBuilder(IPayloadBuilder payloadBuilder) {
+        this.payloadBuilder = payloadBuilder;
+    }
+
+    /**
+     * Sets the label parser used to parse labels from API responses.
+     *
+     * @param labelParser the {@link ILabelParser} to use
+     */
+    @Override
+    public void labelParser(ILabelParser labelParser) {
+        this.labelParser = labelParser;
+    }
+
+    /**
+     * Returns the currently configured payload builder.
+     *
+     * @return the {@link IPayloadBuilder} instance
+     */
+    @Override
+    public IPayloadBuilder payloadBuilder() {
+        return payloadBuilder;
+    }
+
+    /**
+     * Returns the currently configured label parser.
+     *
+     * @return the {@link ILabelParser} instance
+     */
+    @Override
+    public ILabelParser labelParser() {
+        return labelParser;
     }
 }
