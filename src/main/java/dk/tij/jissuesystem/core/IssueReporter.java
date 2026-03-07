@@ -3,6 +3,7 @@ package dk.tij.jissuesystem.core;
 import dk.tij.jissuesystem.api.IIssueProvider;
 import dk.tij.jissuesystem.api.Issue;
 
+import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class IssueReporter {
@@ -18,7 +19,7 @@ public class IssueReporter {
         return provider.fetchLabels().thenAccept(contract::validate);
     }
 
-    public CompletableFuture<Integer> report(Issue issue) {
+    public CompletableFuture<HttpResponse<String>> report(Issue issue) {
         return provider.report(issue);
     }
 }
