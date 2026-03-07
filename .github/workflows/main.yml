@@ -18,7 +18,7 @@ jobs:
         run: |
           BASE="automated-report"
           
-          if [ -z "%LABELS" ]; then
+          if [ -z "$LABELS" ]; then
             echo "VALUE=$BASE" >> $GITHUB_OUTPUT
           else
             echo "VALUE=$BASE,$LABELS" >> $GITHUB_OUTPUT
