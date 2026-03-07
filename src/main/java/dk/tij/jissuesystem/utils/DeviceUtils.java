@@ -11,7 +11,7 @@ public final class DeviceUtils {
         * **OS:** %s (%s)
         * **Java:** %s (%s)
         """,
-                System.getProperty("os.title"), System.getProperty("os.arch"),
+                System.getProperty("os.name"), System.getProperty("os.arch"),
                 System.getProperty("java.version"), System.getProperty("java.vendor")
         );
     }
