@@ -1,0 +1,148 @@
+name: Manual Release
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Level of version bump'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      new_version: ${{ steps.versioning.outputs.NEW_VER }}
+
+    steps:
+      - name: Generate Token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+          fetch-depth: 0
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: temurin
+          server-id: 'github'
+
+      - name: Calculate & Set New Version
+        id: versioning
+        shell: bash
+        run: |
+          CURRENT_VER=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          
+          IFS='.' read -ra ADDR <<< "$CURRENT_VER"
+          MAJOR=${ADDR[0]}
+          MINOR=${ADDR[1]}
+          PATCH=${ADDR[2]}
+          
+          if [[ "${{ github.event.inputs.bump_type }}" == "major" ]]; then
+            NEW_VER="$((MAJOR + 1)).0.0"
+          elif [[ "${{ github.event.inputs.bump_type }}" == "minor" ]]; then
+            NEW_VER="$MAJOR.$((MINOR + 1)).0"
+          else
+            NEW_VER="$MAJOR.$MINOR.$((PATCH + 1))"
+          fi
+          
+          echo "NEW_VER=$NEW_VER" >> $GITHUB_OUTPUT
+          mvn versions:set -DnewVersion=$NEW_VER -DgenerateBackupPoms=false
+
+      - name: Commit & Push to Development
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git commit -am "[ACTION] bump version to ${{ steps.versioning.outputs.NEW_VER }}"
+          git push origin development
+          
+          git tag pom-v${{ steps.versioning.outputs.NEW_VER }}
+          git push origin pom-v${{ steps.versioning.outputs.NEW_VER }}
+
+      - name: Squash Merge Into Main
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          
+          git merge --squash development
+          
+          git commit -m "Release v${{ steps.versioning.outputs.NEW_VER }}"
+          git push origin main
+          
+      - name: Tag it
+        shell: bash
+        run: |          
+          git tag release-v${{ steps.versioning.outputs.NEW_VER }}
+          git push origin release-v${{ steps.versioning.outputs.NEW_VER }}
+
+  build-and-release:
+    needs: version-bump
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: main
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+          server-id: 'github'
+
+      - name: Build JARs
+        shell: bash
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: mvn -B clean install -DskipTests
+
+      - name: Package Artifacts
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp target/jissuesystem-*.jar dist/
+
+      - name: Deploy
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: mvn clean deploy
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-v${{ needs.version-bump.outputs.new_version }}
+          files: dist/*
+          append_body: true
+          make_latest: true
+          name: "JIssueSystem Library v${{ needs.version-bump.outputs.new_version }}"
+          generate_release_notes: true
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
