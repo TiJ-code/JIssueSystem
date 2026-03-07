@@ -7,6 +7,33 @@
     <groupId>dk.tij</groupId>
     <artifactId>jissuesystem</artifactId>
     <version>0.2.0</version>
+    <packaging>jar</packaging>
+    <name>JIssueSystem</name>
+    <description>Java library for automated issue reporting</description>
+    <url>https://github.com/TiJ-code/JIssueSystem</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>tij</id>
+            <name>TiJ</name>
+            <email>no@mail.org</email>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub TiJ-code Packages</name>
+            <url>https://maven.pkg.github.com/TiJ-code/JIssueSystem</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -44,6 +71,42 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <sourcepath>${project.basedir}/src/main</sourcepath>
+                            <doctitle>JIssueSystem API</doctitle>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <additionalOptions>
+                                <additionalOption>-overview</additionalOption>
+                                <additionalOption>${project.basedir}/docs/overview.html</additionalOption>
+                            </additionalOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

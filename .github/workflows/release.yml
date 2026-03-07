@@ -1,4 +1,4 @@
-name: release.yml
+name: Release & Deploy
 on:
   push:
     tags:
@@ -43,6 +43,13 @@ jobs:
           mkdir -p dist
           CURRENT_VERSION=${{ steps.tags.outputs.CURRENT_VERSION }}
           cp target/jissuesystem-*.jar dist/jissuesystem-lib-${CURRENT_VERSION}.jar
+
+      - name: Set Maven version
+        run: mvn versions:set -DnewVersion=${{ steps.tags.outputs.CURRENT_VERSION }}
+
+      - name: Deploy
+        run: |
+          mvn clean deploy
 
       - name: Create Release & Upload Artifacts
         uses: softprops/action-gh-release@v2
