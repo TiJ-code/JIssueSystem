@@ -43,6 +43,8 @@ public class GitHubProvider extends AbstractTokenProvider implements IIssueProvi
      */
     public GitHubProvider(String owner, String repo, String pat) {
         super(owner, repo, pat);
+        labelParser(GitHubLabelParser::parse);
+        payloadBuilder(GitHubPayloadBuilder::build);
     }
 
     /**
@@ -67,7 +69,7 @@ public class GitHubProvider extends AbstractTokenProvider implements IIssueProvi
                 .build();
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(r -> GitHubLabelParser.parse(r.body()));
+                .thenApply(r -> labelParser.parse(r.body()));
     }
 
     /**
@@ -83,7 +85,7 @@ public class GitHubProvider extends AbstractTokenProvider implements IIssueProvi
                 owner, repo
         );
 
-        String payload = GitHubPayloadBuilder.build(issue);
+        String payload = payloadBuilder.buildPayload(issue);
 
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(url))
