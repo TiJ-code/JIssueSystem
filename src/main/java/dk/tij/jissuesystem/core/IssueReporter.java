@@ -8,6 +8,7 @@ import dk.tij.jissuesystem.utils.DeviceUtils;
 
 import java.net.http.HttpResponse;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -60,11 +61,15 @@ public class IssueReporter {
      * @throws IllegalStateException if the reporter is not initialised
      */
     public CompletableFuture<HttpResponse<String>> report(Issue issue) {
+        return report(issue, null);
+    }
+
+    public CompletableFuture<HttpResponse<String>> report(Issue issue, List<String> customInfo) {
         if (!initialised) {
             throw new IllegalStateException("Reporter not initialised");
         }
 
-        Issue enriched = enrich(issue);
+        Issue enriched = enrich(issue, customInfo);
         contract.validate(enriched.labels());
 
         return provider.report(enriched);
@@ -93,12 +98,12 @@ public class IssueReporter {
      * @param issue the issue to enrich
      * @return the enriched issue
      */
-    private Issue enrich(Issue issue) {
+    private Issue enrich(Issue issue, List<String> customInfo) {
         Set<Label> labels = new HashSet<>(issue.labels());
         contract.getRequiredLabels().forEach(r -> labels.add(new Label(r)));
 
         final String enrichedBody = "%s\n%s"
-                .formatted(issue.body(), DeviceUtils.getDiagnostics());
+                .formatted(issue.body(), DeviceUtils.getDiagnostics(customInfo));
 
         return new Issue.Builder()
                 .title(issue.title())
